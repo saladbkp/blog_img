@@ -1,0 +1,87 @@
+✅ 1. Install Dependencies
+bash
+Copy
+Edit
+sudo dnf install -y epel-release
+sudo dnf groupinstall -y "Development Tools"
+sudo dnf install -y libpcap-devel pcre-devel libdnet-devel tcpdump \
+    libdnet libdnet-devel zlib zlib-devel libnghttp2-devel \
+    luajit luajit-devel openssl-devel
+✅ 2. Create a Snort User
+bash
+Copy
+Edit
+sudo groupadd snort
+sudo useradd snort -r -s /sbin/nologin -c SNORT_IDS -g snort
+✅ 3. Download and Install DAQ (Data Acquisition Library)
+bash
+Copy
+Edit
+cd /tmp
+wget https://www.snort.org/downloads/snort/daq-2.0.7.tar.gz
+tar -xvzf daq-2.0.7.tar.gz
+cd daq-2.0.7
+./configure && make && sudo make install
+✅ 4. Download and Install Snort
+bash
+Copy
+Edit
+cd /tmp
+wget https://www.snort.org/downloads/snort/snort-2.9.20.tar.gz
+tar -xvzf snort-2.9.20.tar.gz
+cd snort-2.9.20
+./configure --enable-sourcefire && make && sudo make install
+✅ 5. Create Configuration Directories
+bash
+Copy
+Edit
+sudo mkdir -p /etc/snort/rules
+sudo mkdir -p /var/log/snort
+sudo mkdir -p /usr/local/lib/snort_dynamicrules
+sudo touch /etc/snort/rules/white_list.rules
+sudo touch /etc/snort/rules/black_list.rules
+sudo touch /etc/snort/snort.conf
+✅ 6. Download Snort Rules
+Register at: https://www.snort.org/users/sign_up
+Then get your Oinkcode and download the community rules:
+
+bash
+Copy
+Edit
+cd /tmp
+wget https://www.snort.org/downloads/community/snort3-community-rules.tar.gz
+tar -xvzf snort3-community-rules.tar.gz
+sudo cp -r community-rules/* /etc/snort/rules/
+✅ 7. Basic Configuration File (snort.conf)
+You can start with this minimal config:
+
+bash
+Copy
+Edit
+sudo nano /etc/snort/snort.conf
+Paste:
+
+
+var RULE_PATH /etc/snort/rules
+
+include $RULE_PATH/community-rules/snort3-community.rules
+✅ 8. Test Snort
+To test Snort with basic detection:
+
+bash
+Copy
+Edit
+sudo snort -A console -q -c /etc/snort/snort.conf -i <your-interface>
+Replace <your-interface> with the actual interface name, e.g., eth0 or ens33.
+
+Find your interface name with:
+
+bash
+Copy
+Edit
+ip a
+✅ 9. Log Management
+Snort logs to /var/log/snort/ — you can inspect alerts here or use barnyard2 if you want to parse logs into databases (optional advanced setup).
+
+✅ 10. Optional: Run Snort as a Systemd Service
+If you want to run Snort continuously in the background, I can help you set up a systemd service unit.
