@@ -1,3 +1,28 @@
+# Network Definitions
+var HOME_NET 192.168.200.0/24  # Adjust to your internal network IP range
+var EXTERNAL_NET !$HOME_NET  # Anything outside HOME_NET
+var DNS_SERVERS [192.168.200.1,8.8.8.8]  # DNS servers for traffic monitoring
+var HTTP_SERVERS [192.168.200.4]  # Example web server IP address
+
+# Interface configuration
+config interface: enp0s3
+
+# Rule File Definitions
+include $RULE_PATH/local.rules
+include $RULE_PATH/community.rules  # If you have downloaded the community rules
+include $RULE_PATH/emerging-all.rules  # Add more rules if needed
+
+# Memory settings
+config memory_limit: 256  # Memory limit in MB
+
+# Log file output
+output alert_fast: /var/log/snort/alert  # Where alerts are logged
+
+# Final configuration options
+config policy_mode: normal  # Or 'inline' if using Snort in IPS mode
+
+
+
 https://kifarunix.com/install-and-configure-snort-3-on-rocky-linux/
 
 ✅ 1. Install Dependencies
