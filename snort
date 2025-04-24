@@ -3,6 +3,16 @@ alert ip any any -> $HOME_NET any (msg:"Possible Nmap Scan"; dsize:0; flags:S; s
 alert udp 192.168.200.1 any -> $HOME_NET 53 (msg:"DNS request"; sid:1000002;)
 alert tcp 192.168.200.4 any -> $HOME_NET 80 (msg:"HTTP traffic from web server"; sid:1000001;)
 
+# === Preprocessor Settings ===
+preprocessor stream5_global: track_tcp yes, track_udp yes
+preprocessor stream5_tcp: policy windows, detect_anomalies, require_3whs 180
+preprocessor stream5_udp: timeout 180
+preprocessor http_inspect: global iis_unicode_map unicode.map 1252
+preprocessor http_inspect_server: server default profile all ports { 80 8080 8180 }
+preprocessor frag3_global: max_frags 65536
+preprocessor frag3_engine: policy windows detect_anomalies
+preprocessor sfportscan: proto { all } memcap 10000000 sense_level medium
+
 
 # Network Definitions
 var HOME_NET 192.168.200.0/24  # Adjust to your internal network IP range
